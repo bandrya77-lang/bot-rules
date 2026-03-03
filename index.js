@@ -43,31 +43,53 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 })();
 
 client.on('interactionCreate', async (interaction) => {
-  if (interaction.commandName === 'rules') {
+client.on('interactionCreate', async interaction => {
 
+    // لما يكتب /rules
+    if (interaction.isChatInputCommand()) {
 
-    await interaction.deferReply({ ephemeral: false }).catch((err) => null);
-    const row = new ActionRowBuilder()
-      .addComponents(
-        new StringSelectMenuBuilder()
-          .setCustomId('rules')
-          .setPlaceholder(config.cmd_description)
-          .addOptions(selecttest.map(e => {
-            return {
-              ...e
-            }
-          })),
-      );
-    
-    await interaction.reply({ content: config.cmdTitle, ephemeral: true, components: [row] })
-  }
-  if (interaction.isStringSelectMenu()) {
-    const choice = interaction.values[0];
-    const selectedElement = selecttest.find(element => choice === element.value);
+        if (interaction.commandName === "rules") {
 
-    if (selectedElement) {
-      await interaction.reply({ content: `${selectedElement.emoji} ${selectedElement.label} \n ${selectedElement.message}`, ephemeral: true });
+            const row = new ActionRowBuilder()
+                .addComponents(
+                    new StringSelectMenuBuilder()
+                        .setCustomId('rules')
+                        .setPlaceholder(config.cmd_description)
+                        .addOptions(selecttest.map(e => {
+                            return { ...e }
+                        }))
+                );
+
+            await interaction.reply({
+                content: config.cmdTitle,
+                ephemeral: true,
+                components: [row]
+            });
+
+        }
+
     }
-  }
+
+    // لما يختار من القائمة
+    if (interaction.isStringSelectMenu()) {
+
+        if (interaction.customId === "rules") {
+
+            const choice = interaction.values[0];
+            const selectedElement = selecttest.find(element => choice == element.value);
+
+            if (selectedElement) {
+
+                await interaction.update({
+                    content: `${selectedElement.emoji} ${selectedElement.label}\n${selectedElement.message}`,
+                    components: []
+                });
+
+            }
+
+        }
+
+    }
+
 });
 client.login(process.env.TOKEN);
