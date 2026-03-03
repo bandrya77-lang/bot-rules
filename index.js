@@ -66,8 +66,7 @@ client.on('interactionCreate', async (interaction) => {
     const selectedElement = selecttest.find(element => choice === element.value);
 
     if (selectedElement) {
-      await interaction.deferReply({ ephemeral: true });
-      await interaction.editReply({ content: `${selectedElement.emoji} ${selectedElement.label} \n ${selectedElement.message}`, ephemeral: true });
+      await interaction.reply({ content: `${selectedElement.emoji} ${selectedElement.label} \n ${selectedElement.message}`, ephemeral: true });
     }
   }
 });
