@@ -1,40 +1,47 @@
-const Discord = require("discord.js")
-const { Client, GatewayIntentBits, DiscordAPIError, ChannelType, CategoryChannel, PermissionsBitField, ApplicationCommandOptionType } = require('discord.js');
-const config = require("./config.json")
-const selecttest = require("./rules.json")
+const { 
+  Client, 
+  GatewayIntentBits, 
+  REST, 
+  Routes, 
+  ActionRowBuilder, 
+  StringSelectMenuBuilder 
+} = require('discord.js');
 
-const { REST, Routes } = require('discord.js');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, Events, ModalBuilder, MessageEmbed, MessageAttachment, StringSelectMenuBuilder, EmbedBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
-const { MessageActionRow, MessageButton } = require('discord.js');
+require('dotenv').config();
+
+const config = require("./config.json");
+const selecttest = require("./rules.json");
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildMessageReactions,
-    GatewayIntentBits.DirectMessageReactions
+    GatewayIntentBits.GuildMembers
   ],
 });
-require('dotenv').config()
+
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
-})
+});
+
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 (async () => {
   try {
     console.log('Started refreshing application (/) commands.');
 
-    await rest.put(Routes.applicationCommands(config.ID_Bot_Discord), {
-      body: [
-
-        {
-          name: config.cmdRules,
-          description: config.cmd_description,
-        },
-      ]
-    });
+    await rest.put(
+      Routes.applicationCommands(config.ID_Bot_Discord),
+      {
+        body: [
+          {
+            name: "rules",
+            description: config.cmd_description,
+          },
+        ],
+      }
+    );
 
     console.log('Successfully reloaded application (/) commands.');
   } catch (error) {
@@ -43,51 +50,41 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 })();
 
 client.on('interactionCreate', async (interaction) => {
-    // لما يكتب /rules
-    if (interaction.isChatInputCommand()) {
 
-        if (interaction.commandName === "rules") {
+  // لما يكتب /rules
+  if (interaction.isChatInputCommand()) {
+    if (interaction.commandName === "rules") {
 
-            const row = new ActionRowBuilder()
-                .addComponents(
-                    new StringSelectMenuBuilder()
-                        .setCustomId('rules')
-                        .setPlaceholder(config.cmd_description)
-                        .addOptions(selecttest.map(e => {
-                            return { ...e }
-                        }))
-                );
+      const row = new ActionRowBuilder().addComponents(
+        new StringSelectMenuBuilder()
+          .setCustomId('rules')
+          .setPlaceholder(config.cmd_description)
+          .addOptions(selecttest)
+      );
 
-            await interaction.reply({
-                content: config.cmdTitle,
-                ephemeral: true,
-                components: [row]
-            });
-
-        }
-
+      await interaction.reply({
+        content: config.cmdTitle,
+        ephemeral: true,
+        components: [row],
+      });
     }
+  }
 
-    // لما يختار من القائمة
-    if (interaction.isStringSelectMenu()) {
+  // لما يختار من القائمة
+  if (interaction.isStringSelectMenu()) {
+    if (interaction.customId === "rules") {
 
-        if (interaction.customId === "rules") {
+      const choice = interaction.values[0];
+      const selectedElement = selecttest.find(e => e.value === choice);
 
-            const choice = interaction.values[0];
-            const selectedElement = selecttest.find(element => choice == element.value);
-
-            if (selectedElement) {
-
-                await interaction.update({
-                    content: `${selectedElement.emoji} ${selectedElement.label}\n${selectedElement.message}`,
-                    components: []
-                });
-
-            }
-
-        }
-
+      if (selectedElement) {
+        await interaction.update({
+          content: ${selectedElement.emoji} ${selectedElement.label}\n${selectedElement.message},
+          components: [],
+        });
+      }
     }
-
+  }
 });
+
 client.login(process.env.TOKEN);
