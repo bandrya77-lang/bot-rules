@@ -59,7 +59,7 @@ client.on('interactionCreate', async (interaction) => {
           })),
       );
     
-    await interaction.editReply({ content: config.cmdTitle, ephemeral: true, components: [row] })
+    await interaction.reply({ content: config.cmdTitle, ephemeral: true, components: [row] })
   }
   if (interaction.isStringSelectMenu()) {
     const choice = interaction.values[0];
