@@ -14,14 +14,11 @@ const selecttest = require("./rules.json");
 
 const client = new Client({
   intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMembers
+    GatewayIntentBits.Guilds
   ],
 });
 
-client.on('ready', () => {
+client.once('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
@@ -29,8 +26,6 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 (async () => {
   try {
-    console.log('Started refreshing application (/) commands.');
-
     await rest.put(
       Routes.applicationCommands(config.ID_Bot_Discord),
       {
@@ -42,16 +37,14 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
         ],
       }
     );
-
-    console.log('Successfully reloaded application (/) commands.');
+    console.log("Slash command registered.");
   } catch (error) {
     console.error(error);
   }
 })();
 
-client.on('interactionCreate', async (interaction) => {
+client.on('interactionCreate', async interaction => {
 
-  // لما يكتب /rules
   if (interaction.isChatInputCommand()) {
     if (interaction.commandName === "rules") {
 
@@ -70,7 +63,6 @@ client.on('interactionCreate', async (interaction) => {
     }
   }
 
-  // لما يختار من القائمة
   if (interaction.isStringSelectMenu()) {
     if (interaction.customId === "rules") {
 
@@ -85,6 +77,7 @@ client.on('interactionCreate', async (interaction) => {
       }
     }
   }
+
 });
 
 client.login(process.env.TOKEN);
