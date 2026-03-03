@@ -70,10 +70,10 @@ client.on('interactionCreate', async interaction => {
       const selectedElement = selecttest.find(e => e.value === choice);
 
       if (selectedElement) {
-        await interaction.update({
-         content: `${selectedElement.emoji} ${selectedElement.label}\n${selectedElement.message}`,
-          components: [],
-        });
+      await interaction.reply({
+    content: `${selectedElement.emoji} ${selectedElement.label}\n${selectedElement.message}`,
+    ephemeral: true
+});
       }
     }
   }
