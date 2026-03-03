@@ -41,15 +41,6 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
     console.error(error);
   }
 })();
-const selecttest = [
-  {
-    label: "القوانين العامة",
-    description: "عرض القوانين",
-    value: "rules1",
-    emoji: "📜",
-    message: "١- الاحترام واجب.\n٢- ممنوع السب.\n٣- ممنوع نشر روابط."
-  }
-];
 
 client.on('interactionCreate', async (interaction) => {
     // لما يكتب /rules
