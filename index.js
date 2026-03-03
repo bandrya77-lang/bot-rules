@@ -71,7 +71,7 @@ client.on('interactionCreate', async interaction => {
 
       if (selectedElement) {
         await interaction.update({
-          content: ${selectedElement.emoji} ${selectedElement.label}\n${selectedElement.message},
+         content: `${selectedElement.emoji} ${selectedElement.label}\n${selectedElement.message}`,
           components: [],
         });
       }
