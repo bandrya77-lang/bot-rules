@@ -63,20 +63,24 @@ client.on('interactionCreate', async interaction => {
     }
   }
 
-  if (interaction.isStringSelectMenu()) {
-    if (interaction.customId === "rules") {
+ if (interaction.isStringSelectMenu()) {
+  if (interaction.customId === "rules") {
 
-      const choice = interaction.values[0];
-      const selectedElement = selecttest.find(e => e.value === choice);
+    const choice = interaction.values[0];
+    const selectedElement = selecttest.find(e => e.value === choice);
 
-      if (selectedElement) {
-      await interaction.reply({
-  content: `${selectedElement.emoji} ${selectedElement.label}\n${selectedElement.message}`,
-    ephemeral: true
-});
-      }
+    if (selectedElement) {
+
+      await interaction.deferUpdate();
+
+      await interaction.followUp({
+        content: `${selectedElement.emoji} ${selectedElement.label}\n${selectedElement.message}`,
+        ephemeral: true
+      });
+
     }
   }
+}
 
 });
 
