@@ -47,28 +47,24 @@ client.on('interactionCreate', async (interaction) => {
 
 
     await interaction.deferReply({ ephemeral: false }).catch((err) => null);
+   const embed = new EmbedBuilder()
+  .setTitle("📜 القوانين")
+  .setDescription("اختر من القائمة بالأسفل")
+  .setImage("https://cdn.discordapp.com/attachments/1288579286600515626/1478807328835768432/3fa07620-f1d2-44fb-92c6-b9f4a811b402.jpg?ex=69a9be26&is=69a86ca6&hm=58074c1fba1257b6934a9f9f43cee6e57e54fa1c9d563d54f07c790cd6ec6241&")
+  .setColor("#2b2d31");
     const row = new ActionRowBuilder()
       .addComponents(
         new StringSelectMenuBuilder()
           .setCustomId('rules')
           .setPlaceholder(config.cmd_description)
-          .addOptions(selecttest.map(e => {
-            return {
-              ...e
-            }
-          })),
+          .addOptions(selecttest.map(e => { return {...e}})),
       );
     
-   const embed = new EmbedBuilder()
-  .setTitle(`${selectedElement.emoji} ${selectedElement.label}`)
-  .setDescription(selectedElement.message)
-  .setImage("https://cdn.discordapp.com/attachments/1288579286600515626/1478807328835768432/3fa07620-f1d2-44fb-92c6-b9f4a811b402.jpg?ex=69a9be26&is=69a86ca6&hm=58074c1fba1257b6934a9f9f43cee6e57e54fa1c9d563d54f07c790cd6ec6241&")
-  .setColor("#2b2d31");
-
-await interaction.editReply({
-  embeds: [embed]
-});
   }
+await interaction.editReply({
+  embeds: [embed],
+  components: [row]
+});
   if (interaction.isStringSelectMenu()) {
     const choice = interaction.values[0];
     const selectedElement = selecttest.find(element => choice === element.value);
