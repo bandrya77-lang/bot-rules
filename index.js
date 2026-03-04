@@ -67,7 +67,15 @@ client.on('interactionCreate', async (interaction) => {
 
     if (selectedElement) {
       await interaction.deferReply({ ephemeral: true });
-      await interaction.editReply({ content: `${selectedElement.emoji} ${selectedElement.label} \n ${selectedElement.message}`, ephemeral: true });
+ const embed = new EmbedBuilder()
+  .setTitle(`${selectedElement.emoji} ${selectedElement.label}`)
+  .setDescription(selectedElement.message)
+  .setImage("https://cdn.discordapp.com/attachments/1288579286600515626/1478807328835768432/3fa07620-f1d2-44fb-92c6-b9f4a811b402.jpg?ex=69a9be26&is=69a86ca6&hm=58074c1fba1257b6934a9f9f43cee6e57e54fa1c9d563d54f07c790cd6ec6241&")
+  .setColor("#2b2d31");
+
+await interaction.editReply({
+  embeds: [embed]
+});
     }
   }
 });
