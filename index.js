@@ -78,7 +78,7 @@ await interaction.editReply({
  const embed = new EmbedBuilder()
   .setTitle(`${selectedElement.emoji} ${selectedElement.label}`)
   .setDescription(selectedElement.message)
-  .setImage("selectedElement.image")
+  .setImage(selectedElement.image)
   .setColor("#2b2d31");
 
 await interaction.editReply({
